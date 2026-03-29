@@ -4,6 +4,8 @@ import argparse
 import sys
 from pathlib import Path
 
+from .lexer import LexerError
+from .parser import ParseError
 from .translator import translate_file
 
 
@@ -29,8 +31,11 @@ def main() -> int:
     output_path = Path(args.output) if args.output else input_path.with_suffix(".py")
     try:
         translate_file(input_path, output_path)
-    except Exception as exc:  # noqa: BLE001
-        print(f"Error: {exc}", file=sys.stderr)
+    except (LexerError, ParseError) as exc:
+        print(f"Syntax error: {exc}", file=sys.stderr)
+        return 1
+    except OSError as exc:
+        print(f"I/O error: {exc}", file=sys.stderr)
         return 1
 
     print(f"Translated  {input_path}  →  {output_path}")

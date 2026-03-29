@@ -49,6 +49,7 @@ class Parser:
 
     @property
     def cur(self) -> Token:
+        """Return the token currently under the parser's read head."""
         return self._tokens[self._pos]
 
     def peek(self, offset: int = 1) -> Token:

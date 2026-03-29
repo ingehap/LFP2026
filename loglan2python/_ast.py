@@ -34,7 +34,7 @@ class BoolLiteral:
 
 @dataclass
 class NullLiteral:
-    pass
+    """Represents a null/missing value literal (``NULLVALUE`` keyword)."""
 
 
 @dataclass
@@ -130,7 +130,7 @@ class ReturnStmt:
 
 @dataclass
 class BreakStmt:
-    pass
+    """Represents a ``BREAK`` statement that exits the innermost loop."""
 
 
 @dataclass
