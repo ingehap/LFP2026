@@ -1,0 +1,48 @@
+UNIT porosity
+  ! ---------------------------------------------------------------
+  ! Total porosity from the density-neutron crossplot.
+  !
+  ! Step 1 – density porosity:
+  !   PHID = (RHOMA - RHOB) / (RHOMA - RHOF)
+  !
+  ! Step 2 – crossplot total porosity (linear average):
+  !   PHITOTAL = (PHID + PHIN) / 2.0
+  !
+  ! Both outputs are clipped to [0, 1].
+  ! ---------------------------------------------------------------
+
+  PARAMETER REAL RHOMA = 2.65   ! Matrix density [g/cc]  (quartz)
+  PARAMETER REAL RHOF  = 1.00   ! Fluid density  [g/cc]  (fresh water)
+
+  INPUT  RHOB : REAL   ! Bulk density      [g/cc]
+  INPUT  PHIN : REAL   ! Neutron porosity  [fraction]
+
+  OUTPUT PHID     : REAL   ! Density porosity   [fraction]
+  OUTPUT PHITOTAL : REAL   ! Total porosity     [fraction]
+
+  SUITE DEPTH
+    ! --- Density porosity ---
+    IF ISNULL(RHOB) THEN
+      SETNULL PHID
+    ELSE
+      PHID = (RHOMA - RHOB) / (RHOMA - RHOF)
+      IF PHID > 1.0 THEN
+        PHID = 1.0
+      ELSEIF PHID < 0.0 THEN
+        PHID = 0.0
+      ENDIF
+    ENDIF
+
+    ! --- Crossplot total porosity ---
+    IF ISNULL(PHID) OR ISNULL(PHIN) THEN
+      SETNULL PHITOTAL
+    ELSE
+      PHITOTAL = (PHID + PHIN) / 2.0
+      IF PHITOTAL > 1.0 THEN
+        PHITOTAL = 1.0
+      ELSEIF PHITOTAL < 0.0 THEN
+        PHITOTAL = 0.0
+      ENDIF
+    ENDIF
+  ENDSUITE
+ENDUNIT

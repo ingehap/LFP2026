@@ -1,0 +1,29 @@
+UNIT shale_volume
+  ! ---------------------------------------------------------------
+  ! Calculate shale volume (Vshale) from gamma ray using the
+  ! linear method:
+  !
+  !   Vshale = (GR - GRMIN) / (GRMAX - GRMIN)
+  !
+  ! Result is clipped to the interval [0, 1].
+  ! ---------------------------------------------------------------
+
+  PARAMETER REAL GRMIN = 0.0    ! Clean-sand GR value  [API]
+  PARAMETER REAL GRMAX = 150.0  ! Pure-shale GR value  [API]
+
+  INPUT  GR     : REAL   ! Gamma ray           [API]
+  OUTPUT VSHALE : REAL   ! Shale volume        [fraction]
+
+  SUITE DEPTH
+    IF ISNULL(GR) THEN
+      SETNULL VSHALE
+    ELSE
+      VSHALE = (GR - GRMIN) / (GRMAX - GRMIN)
+      IF VSHALE > 1.0 THEN
+        VSHALE = 1.0
+      ELSEIF VSHALE < 0.0 THEN
+        VSHALE = 0.0
+      ENDIF
+    ENDIF
+  ENDSUITE
+ENDUNIT

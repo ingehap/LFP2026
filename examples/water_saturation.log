@@ -1,0 +1,34 @@
+UNIT water_saturation
+  ! ---------------------------------------------------------------
+  ! Water saturation from Archie's equation:
+  !
+  !   Sw = ( (a * Rw) / (PHI^m * Rt) ) ^ (1/n)
+  !
+  ! Typical parameters: a=1, m=2, n=2.
+  ! Result is clipped to [0, 1]; null if PHI or Rt is null or <= 0.
+  ! ---------------------------------------------------------------
+
+  PARAMETER REAL A  = 1.0    ! Tortuosity factor       [-]
+  PARAMETER REAL M  = 2.0    ! Cementation exponent    [-]
+  PARAMETER REAL N  = 2.0    ! Saturation exponent     [-]
+  PARAMETER REAL RW = 0.05   ! Formation-water resistivity [ohm.m]
+
+  INPUT  PHI : REAL   ! Porosity            [fraction]
+  INPUT  RT  : REAL   ! True resistivity    [ohm.m]
+  OUTPUT SW  : REAL   ! Water saturation    [fraction]
+
+  SUITE DEPTH
+    IF ISNULL(PHI) OR ISNULL(RT) THEN
+      SETNULL SW
+    ELSEIF PHI <= 0.0 OR RT <= 0.0 THEN
+      SETNULL SW
+    ELSE
+      SW = (A * RW / (PHI^M * RT)) ^ (1.0 / N)
+      IF SW > 1.0 THEN
+        SW = 1.0
+      ELSEIF SW < 0.0 THEN
+        SW = 0.0
+      ENDIF
+    ENDIF
+  ENDSUITE
+ENDUNIT
