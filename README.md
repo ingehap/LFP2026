@@ -1,4 +1,4 @@
-# LFP2026 – Bayesian Shifted Gamma-Ray (SGR) Correction
+# BSGR – Bayesian Shifted Gamma-Ray (SGR) Correction
 
 Python implementations of the Bayesian method for correcting open-hole gamma-ray (GR) logs across casing points (Oughton, Wooff & O'Connor, 2014). A copy of the paper is included in `doc/`.
 
